@@ -20,16 +20,16 @@ project( libakrypt-${FULL_VERSION} C )
 # Перечень доступных опций для сборки библиотеки
 option( AK_STATIC_LIB "Build the static library" ON )
 option( AK_SHARED_LIB "Build the shared library" ON )
-option( AK_GMP_TESTS "Build comparison tests for gmp and libakrypt" OFF )
+option( AK_GMP_TESTS "Build comparison tests for gmp and libakrypt" ON )
 
 # -------------------------------------------------------------------------------------------------- #
-# Перечень опций, которые имеют предустановленные значения и могут изменяться через командную строку
+# Перечень опций, которые имеют предустановленнве значения и могут изменяться через командную строку
 # для linux
 #   set( AK_CONFIG_PATH  "/etc" )
 #   set( AK_CA_PATH "/usr/share/ca-certificates" )
 
 # -------------------------------------------------------------------------------------------------- #
-# Подключаем модули CMake для тонкой настройки параметров сборки
+# подключаем модули CMake для тонкой настройки параметров сборки
 set( CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake ${CMAKE_MODULE_PATH} )
 include( DetectFlags )
 include( DetectHeaders )
@@ -37,9 +37,10 @@ include( DetectIntrinsics )
 include( DetectLibraries )
 
 # -------------------------------------------------------------------------------------------------- #
-# Вырабатываем заголовочный файл
+# вырабатываем заголовочный файл
 configure_file( ${CMAKE_SOURCE_DIR}/source/libakrypt-base.h.in ${CMAKE_SOURCE_DIR}/source/libakrypt-base.h @ONLY )
 message("-- Generation of libakrypt-base.h is done")
+
 
 # -------------------------------------------------------------------------------------------------- #
 # Определяем базовое множество исходных текстов библиотеки
@@ -57,6 +58,7 @@ set( AKBASE_SOURCES
 # -------------------------------------------------------------------------------------------------- #
 # Добавляем исходные тексты для криптобиблиотеки
 set( AKRYPT_SOURCES
+   source/poly1305.c
    source/libakrypt-internal.h
    source/ak_options.c
    source/ak_libakrypt.c
@@ -85,7 +87,7 @@ set( AKRYPT_SOURCES
 )
 
 # -------------------------------------------------------------------------------------------------- #
-# Проверка архитектуры
+# проверка архитектуры
 include( TestBigEndian )
 TEST_BIG_ENDIAN( IS_BIG_ENDIAN )
 if( IS_BIG_ENDIAN )
@@ -182,6 +184,7 @@ endforeach()
 # -------------------------------------------------------------------------------------------------- #
 # Сборка тестовых примеров, проверяющих корректность элементарных арифметических операций
 set ( ARITHMETIC_TESTS_LIST
+      poly
       random01
       gf2n
       mgm01
